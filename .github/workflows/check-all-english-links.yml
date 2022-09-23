@@ -6,8 +6,6 @@ name: Check all English links
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '40 19 * * *' # once a day at 19:40 UTC / 11:40 PST
 
 permissions:
   contents: read
