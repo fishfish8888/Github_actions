@@ -4,10 +4,14 @@ on:
   workflow_dispatch:
   
 jobs:
-  steps:
-    - name: Checkout
-      uses: actions/checkoout@v3
+
+  build:
+    runs-on: ubuntu-latest
+  
+    steps:
+      - name: Checkout
+        uses: actions/checkoout@v3
       
-    - name: Build docker image
-      run: |
-        docker build . --file Dockerfile --tag dummp:v1.0
+      - name: Build docker image
+        run: |
+          docker build . --file Dockerfile --tag dummp:v1.0
