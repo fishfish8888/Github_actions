@@ -82,15 +82,15 @@ jobs:
     - name: Build and push image to ACR
       run: |
         docker build . --file Dockerfile --tag ${{secrets.ACR_SERVER}}/${{ github.event.inputs.image_name }}:${{ github.event.inputs.tag }}
-#        docker login --username ${{ secrets.ACR_REPO_TOKEN }} --password ${{ secrets.ACR_REPO_TOKEN_PW }} ${{ secrets.ACR_SERVER }}
-#        docker push ${{ secrets.ACR_SERVER }}/${{ github.event.inputs.image_name }}:${{ github.event.inputs.tag }}
+        docker login --username ${{ secrets.ACR_REPO_TOKEN }} --password ${{ secrets.ACR_REPO_TOKEN_PW }} ${{ secrets.ACR_SERVER }}
+        docker push ${{ secrets.ACR_SERVER }}/${{ github.event.inputs.image_name }}:${{ github.event.inputs.tag }}
 #        az acr build --image ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }} --registry ${{ env.AZURE_CONTAINER_REGISTRY }} -g ${{ env.RESOURCE_GROUP }} .
 
     # List repository images and logout
-#    - name: List ACR repository images and logout
-#      run: |
-#        docker image ls ${{ secrets.ACR_SERVER }}/${{ github.event.inputs.image_name }}
-#        docker logout
+    - name: List ACR repository images and logout
+      run: |
+        docker image ls ${{ secrets.ACR_SERVER }}/${{ github.event.inputs.image_name }}
+        docker logout
 
 #  createSecret:
 #    permissions:
