@@ -39,8 +39,8 @@ jobs:
     - name: set AKS context
       uses: azure/aks-set-context@v3
       with:
-        resource-group: $$ {{ secrets.AKS_RESOURCE_GROUP }}
-        cluster-name: $${{ secrets.AKS_CLUSTER }}
+        resource-group: ${{ secrets.AKS_RESOURCE_GROUP }}
+        cluster-name: ${{ secrets.AKS_CLUSTER }}
         admin: false
         use-kubelogin: true
         
