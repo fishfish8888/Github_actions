@@ -40,7 +40,7 @@ jobs:
       uses: azure/aks-set-context@v3
       with:
         resource-group: $$ {{ secrets.AKS_RESOURCE_GROUP }}
-        cluster-name: $${{ secrests.ASK_CLUSTER }}
+        cluster-name: $${{ secrests.AKS_CLUSTER }}
         admin: false
         use-kubelogin: true
         
