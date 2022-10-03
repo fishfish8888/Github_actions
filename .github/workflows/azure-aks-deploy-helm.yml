@@ -36,7 +36,7 @@ on:
 #  push:
 #    branches: [ "main" ]
   workflow_dispatch:
-    inputs:
+#    inputs:
 #      environment:
 #        type: choice
 #        description: Select Environment variables
@@ -44,12 +44,12 @@ on:
 #        options:
 #        - dev
 #        - prod   
-      image_name:  
-        description: Input image name
-        required: true
-      tag:
-        description: Input image tag
-        required: true  
+#      image_name:  
+#        description: Input image name
+#        required: true
+#      tag:
+#        description: Input image tag
+#        required: true  
 
 #env:
 #  AZURE_CONTAINER_REGISTRY: "your-azure-container-registry"
@@ -69,7 +69,10 @@ jobs:
     steps:
     # Checks out the repository this file is in
     - uses: actions/checkout@v3
-    
+
+    - uses: azure/setup-kubectl@v3
+
+
 #    # Logs in with your Azure credentials
 #    - name: Azure login
 #      uses: azure/login@v1.4.3
@@ -78,19 +81,18 @@ jobs:
 #        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
 #        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
     
-    # Builds and pushes an image up to your Azure Container Registry
-    - name: Build and push image to ACR
-      run: |
-        docker build . --file Dockerfile --tag ${{secrets.ACR_SERVER}}/${{ github.event.inputs.image_name }}:${{ github.event.inputs.tag }}
-        docker login --username ${{ secrets.ACR_REPO_TOKEN }} --password ${{ secrets.ACR_REPO_TOKEN_PW }} ${{ secrets.ACR_SERVER }}
-        docker push ${{ secrets.ACR_SERVER }}/${{ github.event.inputs.image_name }}:${{ github.event.inputs.tag }}
-#        az acr build --image ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }} --registry ${{ env.AZURE_CONTAINER_REGISTRY }} -g ${{ env.RESOURCE_GROUP }} .
+#    # Builds and pushes an image up to your Azure Container Registry
+#    - name: Build and push image to ACR
+#      run: |
+#        docker build . --file Dockerfile --tag ${{secrets.ACR_SERVER}}/${{ github.event.inputs.image_name }}:${{ github.event.inputs.tag }}
+#        docker login --username ${{ secrets.ACR_REPO_TOKEN }} --password ${{ secrets.ACR_REPO_TOKEN_PW }} ${{ secrets.ACR_SERVER }}
+#        docker push ${{ secrets.ACR_SERVER }}/${{ github.event.inputs.image_name }}:${{ github.event.inputs.tag }}
 
-    # List repository images and logout
-    - name: List ACR repository images and logout
-      run: |
-        docker image ls ${{ secrets.ACR_SERVER }}/${{ github.event.inputs.image_name }}
-        docker logout
+#    # List repository images and logout
+#    - name: List ACR repository images and logout
+#      run: |
+#        docker image ls ${{ secrets.ACR_SERVER }}/${{ github.event.inputs.image_name }}
+#        docker logout
 
 #  createSecret:
 #    permissions:
