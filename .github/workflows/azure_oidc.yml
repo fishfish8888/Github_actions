@@ -44,3 +44,17 @@ jobs:
         admin: false
         use-kubelogin: true
         
+    - name: run kubectl command
+      run: |
+        kubectl version
+        kubectl config view
+        kubectl config set-context --current --namespace=github-test
+        kubectl get pods
+        
+    - name: Azure CLI script
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+          az logout
+          az cache purge
+          az account clear
