@@ -13,6 +13,10 @@ jobs:
     environment: dev
     steps:
 #    - uses: actions/checkout@v2
+
+    - name: Install kubectl
+      uses: setup-kubectl@v3
+      
     - name: Azure Login using OIDC
       uses: azure/login@v1
       with:
@@ -20,7 +24,23 @@ jobs:
         client-id: ${{ secrets.AZURE_CLIENT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         allow-no-subscriptions: true
-    - name: 'Run az commands'
+#    - name: 'Run az commands'
+#      run: |
+#        az account show
+#        az group list
+
+    - name: Set up kubelogin for non-interactive login
       run: |
-        az account show
-        az group list
+        curl -LO https://github.com/Azure/kubelogin/releases/download/v0.0.9/kubelogin-linux-amd64.zip
+        sudo unzip -j kubelogin-linux-amd64.zip -d /usr/local/bin
+        rm -f kubelogin-linux-amd64.zip
+        kubelogin --version
+
+    - name: set AKS context
+      uses: azure/aks-set-context@v3
+      with:
+        resource-group: $$ {{ secrets.AKS_RESOURCE_GROUP }}
+        cluster-name: $${{ secrests.ASK_CLUSTER }}
+        admin: false
+        use-kubelogin: true
+        
