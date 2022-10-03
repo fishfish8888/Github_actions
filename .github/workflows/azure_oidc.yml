@@ -29,24 +29,23 @@ jobs:
 #        az account show
 #        az group list
 
-    - name: Set up kubelogin for non-interactive login
-      run: |
-        curl -LO https://github.com/Azure/kubelogin/releases/download/v0.0.9/kubelogin-linux-amd64.zip
-        sudo unzip -j kubelogin-linux-amd64.zip -d /usr/local/bin
-        rm -f kubelogin-linux-amd64.zip
-        kubelogin --version
+#    - name: Set up kubelogin for non-interactive login
+#      run: |
+#        curl -LO https://github.com/Azure/kubelogin/releases/download/v0.0.9/kubelogin-linux-amd64.zip
+#        sudo unzip -j kubelogin-linux-amd64.zip -d /usr/local/bin
+#        rm -f kubelogin-linux-amd64.zip
+#        kubelogin --version
 
     - name: set AKS context
       uses: azure/aks-set-context@v3
       with:
         resource-group: ${{ secrets.AKS_RESOURCE_GROUP }}
         cluster-name: ${{ secrets.AKS_CLUSTER }}
-        admin: false
-        use-kubelogin: true
+ #       admin: false
+ #       use-kubelogin: true
         
     - name: run kubectl command
       run: |
-        kubectl version
         kubectl config view
         kubectl config set-context --current --namespace=github-test
         kubectl get pods
