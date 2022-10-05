@@ -1,21 +1,21 @@
-name: OIDC Demo
+name: Deploy an app to AKS
 
 on:
   workflow_dispatch:
-#    inputs:
-#      environment:
-#        type: choice
-#        description: Select Environment variables
-#        required: true
-#        options:
-#        - dev
-#        - prod
-#      image_name:  
-#        description: Input image name
-#        required: true
-#      tag:
-#        description: Input image tag
-#        required: true
+    inputs:
+      environment:
+        type: choice
+        description: Select Environment variables
+        required: true
+        options:
+        - dev
+        - prod
+      image_name:  
+        description: Input image name
+        required: true
+      tag:
+        description: Input image tag
+        required: true
 
 #      image_tag:
 #        description: Input base image tag
@@ -26,12 +26,13 @@ permissions:
   id-token: write
 
 jobs:
-  dev:
-    name: Deploy to Dev
+  deploy:
+    name: Deploy to AKS
+    environment: ${{ github.event.inputs.environment }}
     runs-on: ubuntu-latest
-    environment: dev
+    
     steps:
-#    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Install kubectl
       uses: azure/setup-kubectl@v3
@@ -42,13 +43,8 @@ jobs:
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         client-id: ${{ secrets.AZURE_CLIENT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-#        allow-no-subscriptions: true
-#    - name: 'Run az commands'
-#      run: |
-#        az account show
-#        az group list
 
-    - name: Set up kubelogin for non-interactive login
+    - name: Install kubelogin for non-interactive login
       run: |
         curl -LO https://github.com/Azure/kubelogin/releases/download/v0.0.20/kubelogin-linux-amd64.zip
         sudo unzip -j kubelogin-linux-amd64.zip -d /usr/local/bin
@@ -68,10 +64,3 @@ jobs:
         kubectl config set-context --current --namespace=github-test
         kubectl get pods
         
-#    - name: Azure CLI script
-#      uses: azure/CLI@v1
-#      with:
-#        inlineScript: |
-#          az logout
-#          az cache purge
-#          az account clear
