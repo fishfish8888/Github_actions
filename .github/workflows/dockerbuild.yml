@@ -2,12 +2,26 @@ name: Docker Image CI
 
 on:
   workflow_dispatch:
-    branches: [ "main" ]
+    inputs:
+      environment:
+        type: choice
+        description: Select Environment variables
+        required: true
+        options:
+          - dev
+          - prod   
+      image_name:  
+        description: Input image name
+        required: true
+      tag:
+        description: Input image tag
+        required: true
   
 jobs:
 
   build:
     name: Build a docker image
+    environment: ${{ github.event.inputs.environment }}
     runs-on: ubuntu-latest
   
     steps:
@@ -16,4 +30,11 @@ jobs:
       
       - name: Build docker image
         run: |
-          docker build . --file Dockerfile --tag dummp:$(date +%s)
+          docker build . --file Dockerfile --tag ${{secrets.ACR_FULLNAME}}/${{ github.event.inputs.image_name }}:${{ github.event.inputs.tag }}
+          
+      - name: Push image to ACR
+        run: |
+          docker login --username ${{ secrets.ACR_REPO_TOKEN }} --password ${{ secrets.ACR_REPO_TOKEN_PW }} ${{ secrets.ACR_FULLNAME }}
+          docker push ${{ secrets.ACR_FULLNAME }}/${{ github.event.inputs.image_name }}:${{ github.event.inputs.tag }}
+          docker image ls ${{ secrets.ACR_FULLNAME }}/${{ github.event.inputs.image_name }}
+          docker logout
