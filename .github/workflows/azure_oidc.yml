@@ -2,14 +2,14 @@ name: Deploy an app to AKS
 
 on:
   workflow_dispatch:
-#    inputs:
-#      environment:
-#        type: choice
-#        description: Select Environment variables
-#        required: true
-#        options:
-#        - dev
-#        - prod
+    inputs:
+      environment:
+        type: choice
+        description: Select Environment variables
+        required: true
+        options:
+        - dev
+        - prod
 #      image_name:  
 #        description: Input image name
 #        required: true
@@ -28,8 +28,8 @@ permissions:
 jobs:
   deploy:
     name: Deploy to AKS
-#    environment: ${{ github.event.inputs.environment }}
-    environment: dev
+    environment: ${{ github.event.inputs.environment }}
+#    environment: dev
     runs-on: ubuntu-latest
     
     steps:
