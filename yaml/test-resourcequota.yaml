@@ -2,7 +2,8 @@
 apiVersion: v1
 kind: ResourceQuota
 metadata:
-  name: resources_quota
+  name: resources-quota-hub
+  namespace: test-ns-hub
 spec:
   hard:
     requests.cpu: "1"
