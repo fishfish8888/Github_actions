@@ -51,7 +51,7 @@ jobs:
         rm -f kubelogin-linux-amd64.zip
         kubelogin --version
 
-    - name: set AKS context
+    - name: Set AKS context
       uses: azure/aks-set-context@v3
       with:
         resource-group: ${{ secrets.AKS_RESOURCE_GROUP }}
@@ -60,26 +60,26 @@ jobs:
         use-kubelogin: true
 
     - name: Set imagePullSecret
-      uses: Azure/k8s-create-secret@v3
+      uses: azure/k8s-create-secret@v3
       with:
+        namespace: ${{ github.event.inputs.namespace }}
         container-registry-url: ${{ secrets.ACR_FULLNAME }}
         container-registry-username: ${{ secrets.ACR_REPO_TOKEN }}
         container-registry-password: ${{ secrets.ACR_REPO_TOKEN_PW }}
         secret-name: demo-k8s-secret
 
-    - name: run kubectl command
+    - name: Run kubectl command
       run: |
-        kubectl config set-context --current --namespace=github-test
+        kubectl config set-context --current --namespace=${{ github.event.inputs.namespace }}
         kubectl get pods
         
-    - name: deploy to cluster
-      uses: Azure/k8s-deploy@v3.1
+    - name: Deploy to cluster
+      uses: azure/k8s-deploy@v3.1
       with:
-        action: deploy
+        namespace: ${{ github.event.inputs.namespace }}
         manifests: |
           manifests/deployment.yml
-          manifests/service.yml
-            images: |
-              demo.azurecr.io/k8sdemo:${{ github.sha }}
-            imagepullsecrets: |
-                 demo-k8s-secret
+        images: |
+          ${{ secrets.ACR_FULLNAME }}/${{ github.event.inputs.image }}:${{ github.event.inputs.image.tag }}
+        imagepullsecrets: |
+          demo-k8s-secret
