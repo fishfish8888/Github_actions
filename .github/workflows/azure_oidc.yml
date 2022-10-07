@@ -78,7 +78,7 @@ jobs:
       with:
         namespace: ${{ github.event.inputs.namespace }}
         manifests: |
-          manifests/deployment.yml
+          yaml/test-actions-deploy-nginx.yaml
         images: |
           ${{ secrets.ACR_FULLNAME }}/${{ github.event.inputs.image }}:${{ github.event.inputs.image.tag }}
         imagepullsecrets: |
