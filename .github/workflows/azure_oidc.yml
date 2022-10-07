@@ -10,26 +10,25 @@ on:
         options:
         - dev
         - prod
-#      image_name:  
-#        description: Input image name
-#        required: true
-#      tag:
-#        description: Input image tag
-#        required: true
-
-#      image_tag:
-#        description: Input base image tag
-#        required: true
-#        default: v1     
+      namespace:
+        description: Input the namespace
+        required: true
+      image:
+        description: Input image name
+        required: true
+      tag:
+        description: Input image tag
+        required: true
 
 permissions:
   id-token: write
+  contents: read
+  actions: read
 
 jobs:
   deploy:
     name: Deploy to AKS
     environment: ${{ github.event.inputs.environment }}
-#    environment: dev
     runs-on: ubuntu-latest
     
     steps:
@@ -59,9 +58,28 @@ jobs:
         cluster-name: ${{ secrets.AKS_CLUSTER }}
         admin: false
         use-kubelogin: true
-        
+
+    - name: Set imagePullSecret
+      uses: Azure/k8s-create-secret@v3
+      with:
+        container-registry-url: ${{ secrets.ACR_FULLNAME }}
+        container-registry-username: ${{ secrets.ACR_REPO_TOKEN }}
+        container-registry-password: ${{ secrets.ACR_REPO_TOKEN_PW }}
+        secret-name: demo-k8s-secret
+
     - name: run kubectl command
       run: |
         kubectl config set-context --current --namespace=github-test
         kubectl get pods
         
+    - name: deploy to cluster
+      uses: Azure/k8s-deploy@v3.1
+      with:
+        action: deploy
+        manifests: |
+          manifests/deployment.yml
+          manifests/service.yml
+            images: |
+              demo.azurecr.io/k8sdemo:${{ github.sha }}
+            imagepullsecrets: |
+                 demo-k8s-secret
