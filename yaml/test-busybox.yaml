@@ -4,6 +4,8 @@ metadata:
   name: busybox
   namespace: test-ns-hub
 spec:
+  nodeSelector:
+    agentpool: npuser01
   containers:
   - image: busybox
     command:
