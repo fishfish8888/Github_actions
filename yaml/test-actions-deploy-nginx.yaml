@@ -14,8 +14,6 @@ spec:
       labels:
         app: nginx
     spec:
-      nodeSelector:
-        agentpool: npuser01
       containers:
       - name: nginx
         image: acrakszup2kwh4fwbse.azurecr.io/test-ns-hub/nginx:v1

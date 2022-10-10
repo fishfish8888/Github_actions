@@ -2,9 +2,13 @@
 apiVersion: v1
 kind: Namespace
 metadata:
+  annotations:
+    scheduler.alpha.kubernetes.io/node-selector: agentpool=npuser01
   name: test-ns-hub
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
+  annotations:
+    scheduler.alpha.kubernetes.io/node-selector: agentpool=npuser01
   name: test-ns-spoke
