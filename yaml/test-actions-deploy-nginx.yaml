@@ -1,28 +1,30 @@
----
+--- 
 apiVersion: apps/v1
 kind: Deployment
-metadata:
+metadata: 
   name: nginx-deployment-hub
   namespace: test-ns-hub
-spec:
-  selector:
-    matchLabels:
-      app: nginx
+spec: 
   replicas: 1
-  template:
-    metadata:
-      labels:
+  selector: 
+    matchLabels: 
+      app: nginx
+  template: 
+    metadata: 
+      labels: 
         app: nginx
-    spec:
-      containers:
-      - name: nginx
-        image: "acrakszup2kwh4fwbse.azurecr.io/test-ns-hub/nginx:v1"
-        ports:
-        - containerPort: 80
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "250m"
-          limits:
-            memory: "256Mi"
-            cpu: "500m"
+    spec: 
+      containers: 
+        - 
+          image: "acrakszup2kwh4fwbse.azurecr.io/test-ns-hub/nginx:v1"
+          name: nginx
+          ports: 
+            - 
+              containerPort: 80
+          resources: 
+            limits: 
+              cpu: 500m
+              memory: 256Mi
+            requests: 
+              cpu: 250m
+              memory: 128Mi
