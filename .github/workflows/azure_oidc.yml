@@ -59,14 +59,14 @@ jobs:
         admin: false
         use-kubelogin: true
 
-    - name: Set imagePullSecret
-      uses: azure/k8s-create-secret@v3
-      with:
-        namespace: ${{ github.event.inputs.namespace }}
-        container-registry-url: ${{ secrets.ACR_FULLNAME }}
-        container-registry-username: ${{ secrets.ACR_REPO_TOKEN }}
-        container-registry-password: ${{ secrets.ACR_REPO_TOKEN_PW }}
-        secret-name: demo-k8s-secret
+#    - name: Set imagePullSecret
+#      uses: azure/k8s-create-secret@v3
+#      with:
+#        namespace: ${{ github.event.inputs.namespace }}
+#        container-registry-url: ${{ secrets.ACR_FULLNAME }}
+#        container-registry-username: ${{ secrets.ACR_REPO_TOKEN }}
+#        container-registry-password: ${{ secrets.ACR_REPO_TOKEN_PW }}
+#        secret-name: demo-k8s-secret
 
     - name: Run kubectl command
       run: |
@@ -81,5 +81,5 @@ jobs:
           yaml/test-actions-deploy-nginx.yaml
         images: |
           ${{ secrets.ACR_FULLNAME }}/${{ github.event.inputs.image }}:${{ github.event.inputs.image.tag }}
-        imagepullsecrets: |
-          demo-k8s-secret
+#        imagepullsecrets: |
+#          demo-k8s-secret
