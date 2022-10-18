@@ -18,10 +18,11 @@ spec:
         image: acrakszup2kwh4fwbse.azurecr.io/test-ns-hub/nginx:v1
         ports:
         - containerPort: 80
-#        resources: 
-#          limits: 
-#            cpu: "500m"
-#            memory: "256Mi"
-#          requests: 
-#            cpu: "250m"
-#            memory: "128Mi"
+        imagePullPolicy: Always
+        resources: 
+          limits: 
+            cpu: "500m"
+            memory: "256Mi"
+          requests: 
+            cpu: "250m"
+            memory: "128Mi"
