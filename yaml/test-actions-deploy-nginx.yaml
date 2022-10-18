@@ -12,11 +12,11 @@ spec:
     metadata: 
       labels: 
         app: nginx
-    spec: 
-      containers: 
+    spec:
+      containers:
       - name: nginx
-        image: "acrakszup2kwh4fwbse.azurecr.io/test-ns-hub/nginx:v1"
-        ports: 
+        image: acrakszup2kwh4fwbse.azurecr.io/test-ns-hub/nginx:v1
+        ports:
         - containerPort: 80
 #        resources: 
 #          limits: 
