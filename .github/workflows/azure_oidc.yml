@@ -37,7 +37,7 @@ jobs:
     - name: Install kubectl
       uses: azure/setup-kubectl@v3
       
-    - name: Azure Login using OIDC
+    - name: Azure OIDC Login
       uses: azure/login@v1
       with:
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
@@ -59,21 +59,6 @@ jobs:
         admin: false
         use-kubelogin: true
 
-#    - name: Set imagePullSecret
-#      uses: azure/k8s-create-secret@v3
-#      with:
-#        namespace: ${{ github.event.inputs.namespace }}
-#        container-registry-url: ${{ secrets.ACR_FULLNAME }}
-#        container-registry-username: ${{ secrets.ACR_REPO_TOKEN }}
-#        container-registry-password: ${{ secrets.ACR_REPO_TOKEN_PW }}
-#        secret-name: demo-k8s-secret
-
-#    - name: Run kubectl command
-#      run: |
-#        kubectl config set-context --current --namespace=${{ github.event.inputs.namespace }}
-#        kubectl create -f yaml/nginx-deployment.yaml
-#        kubectl get pods
-
     - name: Login ACR for Pull image
       run: |
         docker login --username ${{ secrets.ACR_REPO_TOKEN }} --password ${{ secrets.ACR_REPO_TOKEN_PW }} ${{ secrets.ACR_FULLNAME }}
@@ -87,9 +72,16 @@ jobs:
         images: |
           ${{ secrets.ACR_FULLNAME }}/${{ github.event.inputs.image }}:${{ github.event.inputs.tag }}
         annotate-namespace: false
-#        imagepullsecrets: |
-#          demo-k8s-secret
     
-    - name: Logout ACR
+    - name: Display Pod and logout ACR
       run: |
+        kubectl get pods
         docker logout
+
+    - name: Azure CLI script
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+          az logout
+          az cache purge
+          az account clear
