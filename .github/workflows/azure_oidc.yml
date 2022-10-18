@@ -82,5 +82,6 @@ jobs:
           yaml/test-actions-deploy-nginx.yaml
         images: |
           ${{ secrets.ACR_FULLNAME }}/${{ github.event.inputs.image }}:${{ github.event.inputs.tag }}
+        annotate-namespace: false
 #        imagepullsecrets: |
 #          demo-k8s-secret
