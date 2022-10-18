@@ -16,7 +16,7 @@ spec:
     spec: 
       containers: 
         - 
-          image: "acrakszup2kwh4fwbse.azurecr.io/test-ns-hub/nginx:v1"
+          image: acrakszup2kwh4fwbse.azurecr.io/test-ns-hub/nginx:v1
           name: nginx
           ports: 
             - 
