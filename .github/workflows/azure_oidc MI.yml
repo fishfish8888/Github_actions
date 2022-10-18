@@ -1,0 +1,88 @@
+name: Deploy an app to AKS
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        description: Select Environment variables
+        required: true
+        options:
+        - dev
+        - prod
+      namespace:
+        description: Input the namespace
+        required: true
+      image:
+        description: Input image name
+        required: true
+      tag:
+        description: Input image tag
+        required: true
+
+permissions:
+  id-token: write
+  contents: read
+  actions: read
+
+jobs:
+  deploy:
+    name: Deploy to AKS
+    environment: ${{ github.event.inputs.environment }}
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install kubectl
+      uses: azure/setup-kubectl@v3
+      
+    - name: Azure OIDC Login
+      uses: azure/login@v1
+      with:
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: Install kubelogin for non-interactive login
+      run: |
+        curl -LO https://github.com/Azure/kubelogin/releases/download/v0.0.20/kubelogin-linux-amd64.zip
+        sudo unzip -j kubelogin-linux-amd64.zip -d /usr/local/bin
+        rm -f kubelogin-linux-amd64.zip
+        kubelogin --version
+
+    - name: Set AKS context
+      uses: azure/aks-set-context@v3
+      with:
+        resource-group: ${{ secrets.AKS_RESOURCE_GROUP }}
+        cluster-name: ${{ secrets.AKS_CLUSTER }}
+        admin: false
+        use-kubelogin: true
+
+    - name: Login ACR for Pull image
+      run: |
+        docker login --username ${{ secrets.ACR_REPO_TOKEN }} --password ${{ secrets.ACR_REPO_TOKEN_PW }} ${{ secrets.ACR_FULLNAME }}
+
+    - name: Deploy to cluster
+      uses: azure/k8s-deploy@v4
+      with:
+        namespace: ${{ github.event.inputs.namespace }}
+        manifests: |
+          yaml/test-actions-deploy-nginx.yaml
+#        images: |
+#          ${{ secrets.ACR_FULLNAME }}/${{ github.event.inputs.image }}:${{ github.event.inputs.tag }}
+        pull-images: false
+        annotate-namespace: false
+    
+    - name: Display Pod and logout ACR
+      run: |
+        kubectl get pods -n ${{ github.event.inputs.namespace }}
+        docker logout
+
+    - name: Azure CLI script
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+          az logout
+          az cache purge
+          az account clear
