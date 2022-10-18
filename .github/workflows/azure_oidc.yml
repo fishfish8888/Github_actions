@@ -69,8 +69,9 @@ jobs:
         namespace: ${{ github.event.inputs.namespace }}
         manifests: |
           yaml/test-actions-deploy-nginx.yaml
-        images: |
-          ${{ secrets.ACR_FULLNAME }}/${{ github.event.inputs.image }}:${{ github.event.inputs.tag }}
+#        images: |
+#          ${{ secrets.ACR_FULLNAME }}/${{ github.event.inputs.image }}:${{ github.event.inputs.tag }}
+        pull-images: false
         annotate-namespace: false
     
     - name: Display Pod and logout ACR
