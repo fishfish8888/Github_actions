@@ -75,7 +75,7 @@ jobs:
     
     - name: Display Pod and logout ACR
       run: |
-        kubectl get pods
+        kubectl get pods -n ${{ github.event.inputs.namespace }}
         docker logout
 
     - name: Azure CLI script
