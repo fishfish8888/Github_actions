@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:1.14.2
+        image: acrakszup2kwh4fwbse.azurecr.io/test-ns-hub/nginx:v1
         ports:
         - containerPort: 80
 #        resources: 
