@@ -68,13 +68,14 @@ jobs:
 #        container-registry-password: ${{ secrets.ACR_REPO_TOKEN_PW }}
 #        secret-name: demo-k8s-secret
 
-    - name: Run kubectl command
-      run: |
-        kubectl config set-context --current --namespace=${{ github.event.inputs.namespace }}
-        kubectl get pods
+#    - name: Run kubectl command
+#      run: |
+#        kubectl config set-context --current --namespace=${{ github.event.inputs.namespace }}
+#        kubectl create -f yaml/nginx-deployment.yaml
+#        kubectl get pods
         
     - name: Deploy to cluster
-      uses: azure/k8s-deploy@v3.1
+      uses: azure/k8s-deploy@v4
       with:
         namespace: ${{ github.event.inputs.namespace }}
         manifests: |
