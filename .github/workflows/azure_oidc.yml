@@ -71,15 +71,16 @@ jobs:
     - name: Run kubectl command
       run: |
         kubectl config set-context --current --namespace=${{ github.event.inputs.namespace }}
+        kubectl create -f yaml/nginx-deployment.yaml
         kubectl get pods
         
-    - name: Deploy to cluster
-      uses: azure/k8s-deploy@v3.1
-      with:
-        namespace: ${{ github.event.inputs.namespace }}
-        manifests: |
-          yaml/test-actions-deploy-nginx.yaml
-        images: |
-          ${{ secrets.ACR_FULLNAME }}/${{ github.event.inputs.image }}:${{ github.event.inputs.image.tag }}
+#    - name: Deploy to cluster
+#      uses: azure/k8s-deploy@v3.1
+#      with:
+#        namespace: ${{ github.event.inputs.namespace }}
+#        manifests: |
+#          yaml/test-actions-deploy-nginx.yaml
+#        images: |
+#          ${{ secrets.ACR_FULLNAME }}/${{ github.event.inputs.image }}:${{ github.event.inputs.image.tag }}
 #        imagepullsecrets: |
 #          demo-k8s-secret
