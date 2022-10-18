@@ -73,7 +73,11 @@ jobs:
 #        kubectl config set-context --current --namespace=${{ github.event.inputs.namespace }}
 #        kubectl create -f yaml/nginx-deployment.yaml
 #        kubectl get pods
-        
+
+    - name: Login ACR for Pull image
+      run: |
+        docker login --username ${{ secrets.ACR_REPO_TOKEN }} --password ${{ secrets.ACR_REPO_TOKEN_PW }} ${{ secrets.ACR_FULLNAME }}
+
     - name: Deploy to cluster
       uses: azure/k8s-deploy@v4
       with:
@@ -85,3 +89,7 @@ jobs:
         annotate-namespace: false
 #        imagepullsecrets: |
 #          demo-k8s-secret
+    
+    - name: Logout ACR
+      run: |
+        docker logout
