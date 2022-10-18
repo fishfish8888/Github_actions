@@ -81,6 +81,6 @@ jobs:
         manifests: |
           yaml/test-actions-deploy-nginx.yaml
         images: |
-          ${{ secrets.ACR_FULLNAME }}/${{ github.event.inputs.image }}:${{ github.event.inputs.image.tag }}
+          ${{ secrets.ACR_FULLNAME }}/${{ github.event.inputs.image }}:${{ github.event.inputs.tag }}
 #        imagepullsecrets: |
 #          demo-k8s-secret
